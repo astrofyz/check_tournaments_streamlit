@@ -42,7 +42,7 @@ st.markdown(
     "Проверка заигранности турниров кем-то из игроков"
 )
 
-players = st.text_area("Players", height=120, placeholder="12345\n67890")
+players = st.text_area("Players", height=120, placeholder="91247\n8915\n31980\n35604\n67338\n84385")
 tournaments = st.text_area("Tournaments", height=120, placeholder="Substring or id per line")
 
 date_after = st.text_input(
@@ -67,7 +67,8 @@ base_url = DEFAULT_BASE
 
 if st.button("Run check", type="primary"):
     try:
-        player_ids = parse_player_ids_from_text(players)
+        player_input = players or "91247\n8915\n31980\n35604\n67338\n84385"
+        player_ids = parse_player_ids_from_text(player_input)
         tournament_lines = parse_tournament_lines_from_text(tournaments)
     except ValueError as exc:
         st.error(str(exc))
