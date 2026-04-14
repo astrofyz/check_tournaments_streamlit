@@ -42,22 +42,28 @@ st.markdown(
     "Проверка заигранности турниров кем-то из игроков"
 )
 
-players = st.text_area("Players", height=100, placeholder="12345\n67890")
-tournaments = st.text_area("Tournaments", height=100, placeholder="Substring or id per line")
+players = st.text_area("Players", height=120, placeholder="12345\n67890")
+tournaments = st.text_area("Tournaments", height=120, placeholder="Substring or id per line")
 
-c1, c2 = st.columns(2)
-with c1:
-    date_after = st.text_input(
+date_after = st.text_input(
         "dateEnd strictly after (optional)",
         placeholder="YYYY-MM-DD",
         help="Only affects name-based tournament lookup.",
     )
-with c2:
-    env_base = (os.environ.get("TOURN_CHECK_BASE_URL") or "").strip()
-    base_url = st.text_input(
-        "API base URL",
-        value=env_base or DEFAULT_BASE,
-    )
+base_url = DEFAULT_BASE
+# c1, c2 = st.columns(2)
+# with c1:
+#     date_after = st.text_input(
+#         "dateEnd strictly after (optional)",
+#         placeholder="YYYY-MM-DD",
+#         help="Only affects name-based tournament lookup.",
+#     )
+# with c2:
+#     env_base = (os.environ.get("TOURN_CHECK_BASE_URL") or "").strip()
+#     base_url = st.text_input(
+#         "API base URL",
+#         value=env_base or DEFAULT_BASE,
+#     )
 
 if st.button("Run check", type="primary"):
     try:
@@ -97,11 +103,11 @@ if st.button("Run check", type="primary"):
             st.json(warns)
 
     full_json = json.dumps(report, ensure_ascii=False, indent=2)
-    st.download_button(
-        "Download full report (JSON)",
-        data=full_json,
-        file_name="tourn_check_report.json",
-        mime="application/json",
-    )
-    with st.expander("Full report (JSON)"):
-        st.code(full_json, language="json")
+    # st.download_button(
+    #     "Download full report (JSON)",
+    #     data=full_json,
+    #     file_name="tourn_check_report.json",
+    #     mime="application/json",
+    # )
+    # with st.expander("Full report (JSON)"):
+    #     st.code(full_json, language="json")

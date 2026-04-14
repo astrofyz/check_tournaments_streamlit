@@ -27,16 +27,14 @@ class RatingAPIError(Exception):
 
 
 def editor_surnames_from_tournament(row: dict[str, Any]) -> list[str]:
-    editors = row.get("editors")
+    editors = row.get("editors", [])
     if not isinstance(editors, list):
         return []
-    out: list[str] = []
-    for ed in editors:
-        if isinstance(ed, dict):
-            s = ed.get("surname")
-            if s is not None and str(s).strip():
-                out.append(str(s).strip())
-    return out
+    return [
+        str(ed.get("surname")).strip()
+        for ed in editors
+        if isinstance(ed, dict) and ed.get("surname") and str(ed.get("surname")).strip()
+    ]
 
 
 def parse_text_lines(raw: str) -> list[str]:
@@ -500,12 +498,11 @@ def run_check(
     else:
         for pid in unique_player_ids:
             rows = client.fetch_player_tournaments(pid)
-            tids = set()
-            for r in rows:
-                x = tournament_id_from_player_row(r)
-                if x is not None:
-                    tids.add(x)
-            tournaments_per_player[pid] = tids
+            tournaments_per_player[pid] = {
+                tournament_id_from_player_row(r)
+                for r in rows
+                if tournament_id_from_player_row(r) is not None
+            }
 
     n_pt_rows = sum(len(tournaments_per_player[p]) for p in unique_player_ids)
     _timing_note(
